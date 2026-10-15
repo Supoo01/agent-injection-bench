@@ -8,6 +8,22 @@ Built while hardening a local agent ([Hermes Agent](https://github.com/NousResea
 Jetson Thor with Nemotron-3.5-Lightning). The findings from that work are in [docs/findings.md](docs/findings.md).
 The short version: **training the model against injections did not help; a deterministic session rule did.**
 
+## Key findings (October 2026)
+
+The biggest gains came from the agent harness, not from training the model:
+
+- **Sub-agent budget** (stop a sub-agent after 40 tool calls or 12 consecutive calls of the same tool):
+  **−84 % prompt tokens** on 50 real assistant requests, same completion rate, shorter run time.
+- **Deterministic session guardrail** (taint tracking, provenance rule, task list, approval cards):
+  **0 of 160 attacks effective** on this bench, independent of the model.
+- **Training against injections did not help**: a dedicated injection-training adapter was significantly *worse*
+  than its warm start; the most robust model was an adapter never trained on injections.
+- **A dual-LLM quarantine reader** cut attempted attacks from 15 % to 4.4 %, but cost 25 pp task success and
+  +67 % latency, so it was rejected.
+
+Details, numbers and limitations: [docs/findings.md](docs/findings.md). What of this went into production:
+[From bench to production](docs/findings.md#6-from-bench-to-production).
+
 ## What it measures
 
 Each *version* (base model or LoRA adapter, optionally a guardrail configuration) runs the same deterministic

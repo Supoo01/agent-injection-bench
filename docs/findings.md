@@ -98,6 +98,27 @@ tool-call battery.
   (no thinking) 26–33 % slower per token with 5. vLLM's "mean acceptance length" includes the bonus token
   (maximum = k + 1), which we initially misread as "almost all drafts accepted".
 
+## 6. From bench to production
+
+What the measurements above changed in the live assistant (single user, chat front end), in order:
+
+| Date | Change | Basis |
+|---|---|---|
+| 2026-10-14 | **Sub-agent budget** on (40 tool calls / 12 same-tool streak) | replay of 50 real requests: −84 % prompt tokens (section 4) |
+| 2026-10-14 | Speculative decoding kept at **3** draft tokens | A/B 3 vs 5 with thinking + LoRA (section 5) |
+| 2026-10-15 | **Session guardrail** on, exactly the profile measured here (`s2s5`: taint tracking, provenance rule, task list, bundling, sub-agent rules, special-token defanging fail-closed) | 0/160 effective attacks with two different adapters (section 2) |
+| 2026-10-15 | Guardrail fixes from bench findings: never bundle tool-level fallback targets; task list reads `example.com.Next` correctly | K5 case of the reader measurement (section 3) |
+| 2026-10-15 | Approvals of async sub-agents survive the end of the parent's turn; per-session approval for local code without network | test instance before these fixes: 13 approval cards for a single question |
+| – | Quarantine reader **not** deployed | failed pre-registered acceptance (section 3) |
+| – | No new adapter deployed; the older production adapter stays | every newer adapter was worse in the real-request replay (section 4) and none beat it on injection robustness (section 1) |
+
+First day with the guardrail and the budget in production: three sub-agents reading local files triggered 37
+approval checks, of which the user saw **2 cards** (answered "for this session"); the budget stopped all three
+sub-agents after 12 consecutive terminal calls instead of the hundreds seen before.
+
+Every candidate for production now goes through the standing check (`pruefstand/kandidat.sh`, rules R1–R5)
+against the current production adapter before anyone looks at it.
+
 ## Glossary
 
 | Term in code | Meaning |
