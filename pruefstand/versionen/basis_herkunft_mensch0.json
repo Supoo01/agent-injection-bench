@@ -1,0 +1,3 @@
+{"name": "basis_herkunft_mensch0", "modell": "basis", "gateway": "r4", "critic": null,
+ "herkunft": {"modus": "ergaenzung", "lese_egress_ausnahme": true, "zahl_min_stellen": 6, "inhalt_pruefen": true},
+ "mensch": {"p": 0.0, "politik": "streng", "modell": "oracle"}}

@@ -1,0 +1,3 @@
+{"name": "basis_r4_critic2", "modell": "basis",
+ "gateway": {"commit": "7df656f4a5", "kurz": "r4", "schalter": {"taint_tracking": true, "session_rule": true, "fail_closed": true, "verfeinerung": "r4"}},
+ "critic": {"version": "v2", "optionen": {"timeout_s": 20}}}

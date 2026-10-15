@@ -1,0 +1,14 @@
+venv
+venv/
+__pycache__/
+*.pyc
+runs/
+logs/
+vendor/
+pruefstand/laeufe/
+pruefstand/status/
+pruefstand/berichte/
+pruefstand/verlauf.jsonl
+pruefstand/uebersicht.md
+adapters/*
+!adapters/README.md
